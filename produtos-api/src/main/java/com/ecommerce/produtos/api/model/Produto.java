@@ -6,7 +6,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,14 +21,13 @@ public class Produto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable=false)
+    @Column(nullable=false, unique = true)
     private String codigo;
     
     @Column(nullable=false)
     private String nome;
 
-    @Lob
-    @Column(nullable=false, columnDefinition = "Text")
+    @Column(nullable=false, columnDefinition = "TEXT")
     private String descricao;
     
     @Column(nullable=false)
