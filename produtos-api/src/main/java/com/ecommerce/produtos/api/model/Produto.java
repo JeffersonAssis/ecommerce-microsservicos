@@ -34,6 +34,6 @@ public class Produto {
     private double preco;
     
     @ManyToOne
-    @JoinColumn(nullable = false)
+    @JoinColumn(name = "categoria_id",  nullable = false)
     private Categoria categoria;
 }

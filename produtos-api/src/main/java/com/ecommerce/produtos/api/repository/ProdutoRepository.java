@@ -11,9 +11,9 @@ import com.ecommerce.produtos.api.model.Produto;
 
 public interface ProdutoRepository extends JpaRepository<Produto,Long> {
 
-  Optional<List<Produto>> findByNomeLika(String nome);
+  Optional<List<Produto>> findByNomeLike(String nome);
  
-  Optional<List<Produto>> findByPrecoSmallerThan(double preco);
+  Optional<List<Produto>> findByPrecoLessThan(double preco);
  
   Optional<List<Produto>> findByPrecoGreaterThan(double preco);
  
@@ -21,7 +21,7 @@ public interface ProdutoRepository extends JpaRepository<Produto,Long> {
  
   Optional<Produto> findByCodigo(String codigo);
 
-  @Query("SELECT p FROM Produto p where p.categoria.nome = :nome")
-  Optional<List<Produto>> findByCategoria(@Param("nome") String nome);
+  @Query("SELECT p FROM tb_produtos p where p.categoria.nome =:nomeCategoria")
+  Optional<List<Produto>> findByCategoria(@Param("nomeCategoria") String nomeCategoria);
 
 }
