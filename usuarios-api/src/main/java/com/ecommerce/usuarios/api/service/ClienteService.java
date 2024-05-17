@@ -68,15 +68,17 @@ public class ClienteService {
                             .collect(Collectors.toList());
   }
 
-  public Page<Cliente> paginacaoListaClientes(Pageable paginacao){
-    return clienteRepository.findAll(paginacao);
+  public Page<ClienteDTO> paginacaoListaClientes(Pageable paginacao){
+    return clienteRepository.findAll(paginacao).map(Cliente::converterClienteDTO);
   }
 
   public List<ClienteDTO> findByNomeContainsIgnoreCase(String nome){
     Optional<List<Cliente>> listCliOp = clienteRepository.findByNomeContainsIgnoreCase(nome);
     if(listCliOp.isPresent()){
       List<Cliente> listcliente = listCliOp.get();
-      return listcliente.stream().map(c -> c.converterClienteDTO()).collect(Collectors.toList());
+      return listcliente.stream()
+                        .map(c -> c.converterClienteDTO())
+                        .collect(Collectors.toList());
     }
     return new ArrayList<>();
   }

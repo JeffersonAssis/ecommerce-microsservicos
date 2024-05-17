@@ -62,7 +62,7 @@ public class ClienteController {
   public ResponseEntity<ClienteDTO> buscarClienteCpf(@PathVariable("cpf") String cpf){  
     ClienteDTO cliente = clienteService.buscarClienteCpf(cpf);
     if(Objects.isNull(cliente)){
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).build();      
+      return ResponseEntity.status(HttpStatus.NO_CONTENT).build();      
     }
      return ResponseEntity.status(HttpStatus.OK).body(cliente);
   } 
@@ -75,12 +75,11 @@ public class ClienteController {
 
   @CrossOrigin(origins = "*")
   @GetMapping(value = "paginacao")
-  public ResponseEntity<Page<Cliente>> buscarTodosClientesPaginado(@RequestParam(defaultValue ="0") int pagina, @RequestParam(defaultValue = "5") int quant, 
-                                                          @RequestParam(defaultValue = "id") String campoOrdenacao,@RequestParam(defaultValue = "asc") String ordenacao){
+  public ResponseEntity<Page<ClienteDTO>> buscarTodosClientesPaginado(@RequestParam(defaultValue ="0") int pagina, @RequestParam(defaultValue = "5") int quant, 
+                                                                   @RequestParam(defaultValue = "id") String campoOrdenacao,@RequestParam(defaultValue = "asc") String ordenacao){
     Sort.Direction direcao = ordenacao.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
     Pageable paginacao = PageRequest.of(pagina, quant, Sort.by(direcao, campoOrdenacao)); 
    //Page<Cliente> clientePaginacao = clienteService.paginacaoListaClientes(paginacao);
-    
     return ResponseEntity.status(HttpStatus.OK).body(clienteService.paginacaoListaClientes(paginacao));
   } 
 
@@ -89,7 +88,7 @@ public class ClienteController {
   public ResponseEntity<List<ClienteDTO>> buscarClientesNome(@PathVariable("nome_incase") String nome){
     List<ClienteDTO> lClienteDTOs = clienteService.findByNomeContainsIgnoreCase(nome);
     if(Objects.isNull(lClienteDTOs))
-     return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+     return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     
     return ResponseEntity.status(HttpStatus.OK).body(lClienteDTOs);
     
@@ -100,28 +99,28 @@ public class ClienteController {
   public ResponseEntity<List<ClienteDTO>> buscarClientesNomeLike(@PathVariable("nome") String nome){
     List<ClienteDTO> lClienteDTOs = clienteService.findByNomeLike(nome);
     if(Objects.isNull(lClienteDTOs))
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+      return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     
     return ResponseEntity.status(HttpStatus.OK).body(lClienteDTOs);
     
     }
 
   @CrossOrigin(origins = "*")
-  @GetMapping( value = "/buscaremail/{email}")
-  public ResponseEntity<ClienteDTO> buscarClientesEmail(@PathVariable("email") String email){
+  @GetMapping( value = "/buscaremail/")
+  public ResponseEntity<ClienteDTO> buscarClientesEmail(@RequestParam(name = "email", required= false) String email){
     ClienteDTO lClienteDTOs = clienteService.buscarClienteEmail(email);
     if(Objects.isNull(lClienteDTOs))
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+      return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     
     return ResponseEntity.status(HttpStatus.OK).body(lClienteDTOs);
     
     }
 
   @CrossOrigin(origins = "*")
-  @GetMapping( value = "/existeemail/{email}")
-  public ResponseEntity<String> existeClientesEmail(@PathVariable("email") String email){
+  @GetMapping( value = "/existeemail/")
+  public ResponseEntity<String> existeClientesEmail(@RequestParam("email") String email){
     if(!clienteService.isExistClienteEmail(email))
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+      return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     
     return ResponseEntity.status(HttpStatus.OK).body("E-mail já esta cadastrado: "+ email);
     
@@ -132,7 +131,7 @@ public class ClienteController {
   public ResponseEntity<List<ClienteDTO>> buscarClientesDataNascimento(@PathVariable("inicio") LocalDate inicio, @PathVariable("fim") LocalDate fim){
     List<ClienteDTO> lClienteDTOs = clienteService.findByDataNascimento(inicio, fim);
     if(Objects.isNull(lClienteDTOs))
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+      return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     
     return ResponseEntity.status(HttpStatus.OK).body(lClienteDTOs);
     
@@ -143,7 +142,7 @@ public class ClienteController {
   public ResponseEntity<ClienteDTO> deleteCliente(@PathVariable ("cpf") String cpf){
     ClienteDTO cli = clienteService.deleteCliente(cpf);
     if(Objects.isNull(cli)){
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+      return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
     return ResponseEntity.status(HttpStatus.OK).body(cli);
   }
@@ -157,7 +156,7 @@ public class ClienteController {
       }
       ClienteDTO clienteDTO = clienteService.atualizarClientePut(cpf, cliente);
       if(Objects.isNull(clienteDTO)){
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente não Localizado!");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Cliente não Localizado!");
       }
      return ResponseEntity.status(HttpStatus.OK).body(clienteDTO);
   }
