@@ -4,6 +4,10 @@ import java.util.List;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -86,28 +90,52 @@ public class ProdutoController {
   @CrossOrigin("*")
   @GetMapping("/buscar")
   public ResponseEntity<List<ProdutoDTO>> listaProdutos(@RequestParam(name="menorPreco", required = false, defaultValue= "0") double menorPreco,
-                                                        @RequestParam(name="maiorPreco", required =false, defaultValue = "0") double maiorPreco,
-                                                        @RequestParam(name ="nomeProd" , required = false) String nomeProd){
-    if(nomeProd!=null){
-      List<ProdutoDTO> lProdutoDTOs = produtoService.findByNomeLike(nomeProd);
-      if(Objects.nonNull(lProdutoDTOs))
-        return ResponseEntity.status(HttpStatus.OK).body(lProdutoDTOs);
+  @RequestParam(name="maiorPreco", required =false, defaultValue = "0") double maiorPreco, @RequestParam(name ="nomeProd" , required = false) String nomeProd,
+  @RequestParam(name = "catProd" , required = false) String catProd){
+    
+    List<ProdutoDTO> lProdutoDTOs; 
+   
+    if(nomeProd!=null && !nomeProd.isEmpty()){
+      lProdutoDTOs = produtoService.findByNomeLike(nomeProd);
     }else if(menorPreco > 0 && maiorPreco == 0 ){
-      List<ProdutoDTO> lProdutoDTOs = produtoService.findByMenorPreco(menorPreco);
-      if(Objects.nonNull(lProdutoDTOs))
-        return ResponseEntity.status(HttpStatus.OK).body(lProdutoDTOs);
+      lProdutoDTOs = produtoService.findByMenorPreco(menorPreco);
     }else if(maiorPreco > 0 && menorPreco == 0){
-      List<ProdutoDTO> lProdutoDTOs = produtoService.findByMaiorPreco(maiorPreco);
-      if(Objects.nonNull(lProdutoDTOs))
-        return ResponseEntity.status(HttpStatus.OK).body(lProdutoDTOs);
+      lProdutoDTOs = produtoService.findByMaiorPreco(maiorPreco);
     }else if(menorPreco > 0 && maiorPreco > 0){
-      List<ProdutoDTO> lProdutoDTOs = produtoService.findByDiferencaPreco(menorPreco, maiorPreco);
-      if(Objects.nonNull(lProdutoDTOs))
-        return ResponseEntity.status(HttpStatus.OK).body(lProdutoDTOs);
-    }
-                                                          
-    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+       lProdutoDTOs = produtoService.findByDiferencaPreco(menorPreco, maiorPreco);
+    }else if(catProd!=null){
+      lProdutoDTOs = produtoService.findByCategoria(catProd);
+    }else{
+      return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }                                                      
+    return ResponseEntity.status(HttpStatus.OK).body(lProdutoDTOs);
   }
 
+  @CrossOrigin("*")
+  @GetMapping("/pagebuscar")
+  public ResponseEntity<Page<ProdutoDTO>> listaProdutosPaginacao(@RequestParam(name="menorPreco", defaultValue = "0", required = false) Double menorPreco,
+  @RequestParam(name="maiorPreco", required =false ,defaultValue = "0") Double maiorPreco, @RequestParam(name ="nomeProd" , required = false) String nomeProd,
+  @RequestParam(name = "catProd" , required = false) String catProd, @RequestParam(name="pagina", defaultValue = "0") int pagina,
+  @RequestParam(name="size", defaultValue = "5") int size, @RequestParam(name="campsort", defaultValue = "preco") String campsort,
+  @RequestParam(name="ordenacao", defaultValue = "asc") String ordenacao) {
+        
+      Sort.Direction direcao = ordenacao.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+      Pageable paginacao = PageRequest.of(pagina, size, Sort.by(direcao, campsort));
+      Page<ProdutoDTO> produtosPaginados;
+
+      if (nomeProd != null && !nomeProd.isEmpty()) {
+          produtosPaginados = produtoService.findByNomeLike(nomeProd, paginacao);
+      }else if(menorPreco > 0 && maiorPreco == 0) {
+          produtosPaginados = produtoService.findByMenorPreco(menorPreco, paginacao);
+      }else if(maiorPreco > 0 && menorPreco == 0) {
+          produtosPaginados = produtoService.findByMaiorPreco(maiorPreco, paginacao);
+      }else if(catProd != null && !catProd.isEmpty()) {
+          produtosPaginados = produtoService.findByCategoria(catProd, paginacao);
+      }else{
+          return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+      }
+
+      return ResponseEntity.status(HttpStatus.OK).body(produtosPaginados);
+  }
 
 }

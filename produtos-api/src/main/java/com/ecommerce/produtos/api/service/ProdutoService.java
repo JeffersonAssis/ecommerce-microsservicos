@@ -8,6 +8,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.ecommerce.produtos.api.dto.ProdutoDTO;
@@ -89,5 +91,51 @@ public class ProdutoService {
       return listProduto.stream().map(p -> p.conveProdutoDTO()).collect(Collectors.toList());
     }
     return new ArrayList<>();
+  }
+
+  public List<ProdutoDTO> findByCategoria(String catProd){
+    Optional<List<Produto>> listProOp = produtoRepository.findByCategoria(catProd);
+    if(listProOp.isPresent()){
+      List<Produto> listProduto = listProOp.get();
+      return listProduto.stream().map(p -> p.conveProdutoDTO()).collect(Collectors.toList());
+    }
+    return new ArrayList<>();
+  }
+
+  public Page<ProdutoDTO> findByCategoria(String catProd, Pageable pageable){
+    Optional<Page<Produto>> listProOp = produtoRepository.findByCategoria(catProd, pageable);
+    if(listProOp.isPresent()){
+      Page<Produto> listProduto = listProOp.get();
+      return listProduto.map(Produto::conveProdutoDTO);
+    }
+    return null;
+  }
+
+  public Page<ProdutoDTO> findByMenorPreco(double menorPreco, Pageable pageable){
+    Optional<Page<Produto>> listProOp = produtoRepository.findByPrecoLessThanEqual(menorPreco,pageable);
+    if(listProOp.isPresent()){
+      Page<Produto> listProduto = listProOp.get();
+      return listProduto.map(Produto::conveProdutoDTO);
+    }
+    return null;
+  }
+
+  public Page<ProdutoDTO> findByMaiorPreco(double maiorPreco, Pageable pageable){
+    Optional<Page<Produto>> listProOp = produtoRepository.findByPrecoGreaterThanEqual(maiorPreco,pageable);
+    if(listProOp.isPresent()){
+     Page<Produto> listProduto = listProOp.get();
+      return listProduto.map(Produto::conveProdutoDTO);
+    }
+    return null;
+  }
+
+
+  public Page<ProdutoDTO> findByNomeLike(String nome, Pageable pageable){
+    Optional<Page<Produto>> listProOp = produtoRepository.findByNomeLike("%"+nome+"%",pageable);
+    if(listProOp.isPresent()){
+      Page<Produto> listProduto = listProOp.get();
+      return listProduto.map(Produto::conveProdutoDTO);
+    }
+    return  null;
   }
 }

@@ -77,9 +77,9 @@ public class ClienteController {
   @GetMapping(value = "paginacao")
   public ResponseEntity<Page<ClienteDTO>> buscarTodosClientesPaginado(@RequestParam(defaultValue ="0") int pagina, @RequestParam(defaultValue = "5") int quant, 
                                                                    @RequestParam(defaultValue = "id") String campoOrdenacao,@RequestParam(defaultValue = "asc") String ordenacao){
+    
     Sort.Direction direcao = ordenacao.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
     Pageable paginacao = PageRequest.of(pagina, quant, Sort.by(direcao, campoOrdenacao)); 
-   //Page<Cliente> clientePaginacao = clienteService.paginacaoListaClientes(paginacao);
     return ResponseEntity.status(HttpStatus.OK).body(clienteService.paginacaoListaClientes(paginacao));
   } 
 
