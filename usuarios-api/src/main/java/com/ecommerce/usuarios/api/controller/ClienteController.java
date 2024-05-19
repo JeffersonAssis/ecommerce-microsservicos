@@ -67,46 +67,44 @@ public class ClienteController {
      return ResponseEntity.status(HttpStatus.OK).body(cliente);
   } 
 
-  @CrossOrigin(origins = "*")
-  @GetMapping()
-  public ResponseEntity<List<ClienteDTO>> buscarTodosClientes(){
-      return ResponseEntity.ok().body(clienteService.obterListaClientes());
-  } 
-
+  
   @CrossOrigin(origins = "*")
   @GetMapping(value = "paginacao")
   public ResponseEntity<Page<ClienteDTO>> buscarTodosClientesPaginado(@RequestParam(defaultValue ="0") int pagina, @RequestParam(defaultValue = "5") int quant, 
-                                                                   @RequestParam(defaultValue = "id") String campoOrdenacao,@RequestParam(defaultValue = "asc") String ordenacao){
+  @RequestParam(defaultValue = "id") String campoOrdenacao,@RequestParam(defaultValue = "asc") String ordenacao){
     
     Sort.Direction direcao = ordenacao.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
     Pageable paginacao = PageRequest.of(pagina, quant, Sort.by(direcao, campoOrdenacao)); 
     return ResponseEntity.status(HttpStatus.OK).body(clienteService.paginacaoListaClientes(paginacao));
   } 
 
+ 
   @CrossOrigin(origins = "*")
-  @GetMapping( value = "/buscarnomecontains/{nome_incase}")
-  public ResponseEntity<List<ClienteDTO>> buscarClientesNome(@PathVariable("nome_incase") String nome){
-    List<ClienteDTO> lClienteDTOs = clienteService.findByNomeContainsIgnoreCase(nome);
-    if(Objects.isNull(lClienteDTOs))
-     return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+  @GetMapping( value = "/buscar")
+  public ResponseEntity<List<ClienteDTO>> buscarClientesNomeLike(@RequestParam( name = "nome", required = false) String nome,
+  @RequestParam(name= "inicio", required = false) LocalDate inicio, @RequestParam(name= "fim", required = false) LocalDate fim,
+  @RequestParam(name= "nomeIgCase", required = false) String nomeIgCase){
+    List<ClienteDTO> lClienteDTOs;
+   
+    if(nome != null && !nome.isEmpty()){
+      lClienteDTOs = clienteService.findByNomeLike(nome);
+    }else if(inicio != null && fim != null){
+      lClienteDTOs = clienteService.findByDataNascimento(inicio, fim);
+    }else if(nomeIgCase != null && !nomeIgCase.isEmpty()){
+      lClienteDTOs = clienteService.findByNomeContainsIgnoreCase(nomeIgCase);
+    }else{
+      lClienteDTOs = clienteService.obterListaClientes();
+    }
     
-    return ResponseEntity.status(HttpStatus.OK).body(lClienteDTOs);
+    if(!lClienteDTOs.isEmpty())
+      return ResponseEntity.status(HttpStatus.OK).body(lClienteDTOs);
     
+    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+
     }
 
   @CrossOrigin(origins = "*")
-  @GetMapping( value = "/buscarnomelike/{nome}")
-  public ResponseEntity<List<ClienteDTO>> buscarClientesNomeLike(@PathVariable("nome") String nome){
-    List<ClienteDTO> lClienteDTOs = clienteService.findByNomeLike(nome);
-    if(Objects.isNull(lClienteDTOs))
-      return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    
-    return ResponseEntity.status(HttpStatus.OK).body(lClienteDTOs);
-    
-    }
-
-  @CrossOrigin(origins = "*")
-  @GetMapping( value = "/buscaremail/")
+  @GetMapping( value = "/email/")
   public ResponseEntity<ClienteDTO> buscarClientesEmail(@RequestParam(name = "email", required= false) String email){
     ClienteDTO lClienteDTOs = clienteService.buscarClienteEmail(email);
     if(Objects.isNull(lClienteDTOs))
@@ -125,17 +123,7 @@ public class ClienteController {
     return ResponseEntity.status(HttpStatus.OK).body("E-mail já esta cadastrado: "+ email);
     
     }
-    
-  @CrossOrigin(origins = "*")
-  @GetMapping( value = "/buscardatanasecimento/{inicio}/{fim}")
-  public ResponseEntity<List<ClienteDTO>> buscarClientesDataNascimento(@PathVariable("inicio") LocalDate inicio, @PathVariable("fim") LocalDate fim){
-    List<ClienteDTO> lClienteDTOs = clienteService.findByDataNascimento(inicio, fim);
-    if(Objects.isNull(lClienteDTOs))
-      return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    
-    return ResponseEntity.status(HttpStatus.OK).body(lClienteDTOs);
-    
-  }
+
   
   @CrossOrigin("*")
   @DeleteMapping("/{cpf}")

@@ -28,6 +28,9 @@ public class ProdutoService {
 
 
   public ProdutoDTO produtoSave(Produto produto){
+   Optional<String> cod = produtoRepository.findByProximoCod();
+   int codigo = Integer.parseInt(cod.get())+1;
+   produto.setCodigo(String.valueOf(codigo));
     ProdutoDTO pDto = produtoRepository.save(produto).conveProdutoDTO();
     if(Objects.nonNull(pDto))
       return pDto;

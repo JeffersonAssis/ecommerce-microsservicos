@@ -34,4 +34,7 @@ public interface ProdutoRepository extends JpaRepository<Produto,Long> {
   @Query("SELECT p FROM tb_produtos p where p.categoria.nome =:nomeCategoria")
   Optional<List<Produto>> findByCategoria(@Param("nomeCategoria") String nomeCategoria);
 
+  @Query("SELECT p.codigo FROM tb_produtos p ORDER BY p.id DESC LIMIT 1")
+  Optional<String> findByProximoCod();
+
 }

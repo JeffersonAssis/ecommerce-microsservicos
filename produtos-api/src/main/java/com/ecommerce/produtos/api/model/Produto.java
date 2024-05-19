@@ -1,7 +1,5 @@
 package com.ecommerce.produtos.api.model;
 
-import org.springframework.boot.autoconfigure.web.servlet.WebMvcProperties.Problemdetails;
-
 import com.ecommerce.produtos.api.dto.ProdutoDTO;
 
 import jakarta.persistence.Column;
@@ -14,7 +12,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,7 +27,6 @@ public class Produto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Pattern(regexp = "\\d+", message = "O campo só pode conter digitos!")
     @Column(nullable=false, unique = true)
     private String codigo;
     
@@ -42,7 +38,6 @@ public class Produto {
 
     @NotNull(message = "O campo não pode ser nulo")
     @NotBlank(message = "O campo não pode ser em branco")
-    @Size(min = 7)
     @Column(nullable=false, columnDefinition = "TEXT")
     private String descricao;
     
