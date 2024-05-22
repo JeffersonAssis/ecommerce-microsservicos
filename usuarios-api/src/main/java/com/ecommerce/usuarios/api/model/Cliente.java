@@ -5,7 +5,7 @@ import java.time.Period;
 
 import org.hibernate.validator.constraints.br.CPF;
 
-import com.ecommerce.usuarios.api.dto.ClienteDTO;
+import com.ecommerce.comrpas.client.usuario.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Column;

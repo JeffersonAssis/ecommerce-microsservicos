@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;import org.springframework.web.bind.annotation.RestController;
 
-import com.ecommerce.produtos.api.dto.CategoriaDTO;
+import com.ecommerce.comrpas.client.produto.CategoriaDTO;
 import com.ecommerce.produtos.api.model.Categoria;
 import com.ecommerce.produtos.api.service.CategoriaService;
 import com.ecommerce.produtos.api.util.ValidadorBindingResult;

@@ -1,39 +1,26 @@
-package com.ecommerce.usuarios.api.dto;
+package com.ecommerce.comrpas.client.usuario;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class FornecedorDTO {
+@NoArgsConstructor
+public class ClienteDTO {
 
-
-  private String nomeFantasia;
-
-  private String razaoSocial;  
-
-  private String cnpj;
-
+  private Long id;
+  private String nome;
+  private String cpf;
   private String email;
- 
-  private String telefone1;
-
-  private String telefone2;
- 
+  private String telefone;
+  private int idade;
   private String cep;
-
   private String logradouro;
-
   private String localidade;
-
   private String uf;
-
   private String bairro;
-
   private String numero;
-
   private String complemento;
 
 }

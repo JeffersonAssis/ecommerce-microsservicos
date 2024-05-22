@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ecommerce.usuarios.api.dto.FornecedorDTO;
+import com.ecommerce.comrpas.client.usuario.FornecedorDTO;
 import com.ecommerce.usuarios.api.model.Fornecedor;
 import com.ecommerce.usuarios.api.service.FornecedorService;
 import com.ecommerce.usuarios.api.util.ValidadorBindingResult;

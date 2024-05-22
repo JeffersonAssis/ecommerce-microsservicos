@@ -33,6 +33,11 @@
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-mysql</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.ecommerce.comrpas.client</groupId>
+			<artifactId>compras-client</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	<!-- https://mvnrepository.com/artifact/org.hibernate.validator/hibernate-validator -->
 		<dependency>
 				<groupId>org.hibernate.validator</groupId>

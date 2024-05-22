@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.ecommerce.usuarios.api.dto.ClienteDTO;
+import com.ecommerce.comrpas.client.usuario.*;
 import com.ecommerce.usuarios.api.model.Cliente;
 import com.ecommerce.usuarios.api.model.Endereco;
 import com.ecommerce.usuarios.api.repository.ClienteRepository;
@@ -22,11 +22,33 @@ public class ClienteService {
   private final ClienteRepository clienteRepository;
   
   @Autowired
+  private EnderecoService enderecoService;
+
+  @Autowired
   private ConsultaCep consultaCep;
 
   @Autowired
   public ClienteService (ClienteRepository clienteRepository){
     this.clienteRepository = clienteRepository;
+  
+  }
+
+
+  public ClienteDTO save(Cliente cliente){
+
+    EnderecoDTO enderecoDTO = enderecoService.buscaEnderecoDTO(cliente.getEndereco().getCep());
+    Endereco end = new Endereco();
+    end.setBairro(enderecoDTO.getBairro());
+    end.setLocalidade(enderecoDTO.getLocalidade());
+    end.setLogradouro(enderecoDTO.getLogradouro());
+    end.setUf(enderecoDTO.getUf());
+    end.setComplemento(enderecoDTO.getComplemento());
+    end.setCep(cliente.getEndereco().getCep());
+    end.setNumero(cliente.getEndereco().getNumero());
+    cliente.setEndereco(end);
+
+    return clienteRepository.save(cliente).converterClienteDTO();
+
   }
 
   public ClienteDTO saveCliente(Cliente cliente){

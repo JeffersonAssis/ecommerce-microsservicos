@@ -9,7 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.ecommerce.usuarios.api.dto.FornecedorDTO;
+import com.ecommerce.comrpas.client.usuario.FornecedorDTO;
 import com.ecommerce.usuarios.api.model.Endereco;
 import com.ecommerce.usuarios.api.model.Fornecedor;
 import com.ecommerce.usuarios.api.repository.FornecedorRepository;

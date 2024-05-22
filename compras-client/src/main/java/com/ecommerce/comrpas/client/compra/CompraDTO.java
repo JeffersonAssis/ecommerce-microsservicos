@@ -1,15 +1,19 @@
-package com.ecommerce.usuarios.api.dto;
+package com.ecommerce.comrpas.client.compra;
+
+import java.time.LocalDate;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class ClienteDTO {
-
+@AllArgsConstructor
+public class CompraDTO {
+ 
   private Long id;
+
   private String nome;
   private String cpf;
   private String email;
@@ -22,5 +26,11 @@ public class ClienteDTO {
   private String bairro;
   private String numero;
   private String complemento;
+
+  private double total;
+  
+  private LocalDate data;
+
+  private List<ItemDTO> itensDto;
 
 }

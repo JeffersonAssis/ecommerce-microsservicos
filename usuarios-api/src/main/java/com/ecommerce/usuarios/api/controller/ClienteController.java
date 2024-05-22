@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ecommerce.usuarios.api.dto.ClienteDTO;
+import com.ecommerce.comrpas.client.usuario.ClienteDTO;
 import com.ecommerce.usuarios.api.model.Cliente;
 import com.ecommerce.usuarios.api.service.ClienteService;
 import com.ecommerce.usuarios.api.util.ValidadorBindingResult;
@@ -52,6 +52,20 @@ public class ClienteController {
       }
       try{
         return ResponseEntity.ok().body(clienteService.saveCliente(cliente));
+      } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao cadastrar o cliente "+ e);
+      }
+  }
+
+  @CrossOrigin(origins = "*")
+  @PostMapping("save")
+  public ResponseEntity<?> save(@RequestBody @Valid Cliente cliente, BindingResult bindingResult){
+      ValidadorBindingResult validadorBindingResult = new ValidadorBindingResult(bindingResult);
+      if(validadorBindingResult.hasErrors()){
+        return ResponseEntity.badRequest().body(validadorBindingResult.getErrors());
+      }
+      try{
+        return ResponseEntity.ok().body(clienteService.save(cliente));
       } catch (Exception e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao cadastrar o cliente "+ e);
       }

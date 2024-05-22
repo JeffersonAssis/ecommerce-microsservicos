@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ecommerce.produtos.api.dto.CategoriaDTO;
+import com.ecommerce.comrpas.client.produto.CategoriaDTO;
 import com.ecommerce.produtos.api.model.Categoria;
 import com.ecommerce.produtos.api.repository.CategoriaRepository;
 

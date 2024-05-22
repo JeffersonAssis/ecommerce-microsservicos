@@ -29,7 +29,8 @@ public interface ProdutoRepository extends JpaRepository<Produto,Long> {
   
   Optional<Page<Produto>> findByPrecoLessThanEqual(Double preco, Pageable pageable);
   
-  Optional<Page<Produto>> findByCategoria(String categoria, Pageable pageable);
+  @Query("SELECT p FROM tb_produtos p where p.categoria.nome =:nomeCategoria")
+  Optional<Page<Produto>> findByCategoria(@Param("nomeCategoria") String nomeCategoria, Pageable pageable);
 
   @Query("SELECT p FROM tb_produtos p where p.categoria.nome =:nomeCategoria")
   Optional<List<Produto>> findByCategoria(@Param("nomeCategoria") String nomeCategoria);

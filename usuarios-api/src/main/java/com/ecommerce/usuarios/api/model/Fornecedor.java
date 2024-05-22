@@ -1,6 +1,6 @@
 package com.ecommerce.usuarios.api.model;
 
-import com.ecommerce.usuarios.api.dto.FornecedorDTO;
+import com.ecommerce.comrpas.client.usuario.FornecedorDTO;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;

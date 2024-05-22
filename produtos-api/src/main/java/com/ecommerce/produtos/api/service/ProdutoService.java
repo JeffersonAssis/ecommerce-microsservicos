@@ -12,7 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.ecommerce.produtos.api.dto.ProdutoDTO;
+import com.ecommerce.comrpas.client.produto.ProdutoDTO;
 import com.ecommerce.produtos.api.model.Produto;
 import com.ecommerce.produtos.api.repository.ProdutoRepository;
 
