@@ -1,5 +1,7 @@
 package com.ecommerce.comrpas.client.compra;
 
+import com.ecommerce.comrpas.client.produto.ProdutoDTO;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,11 +12,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ItemDTO {
    
-   private Long id;
-    private String codigo;
-    private String nome;
-    private String descricao;
-    private double preco;
-    private String categoria;
+    
+    private Long id;
+
+    private ProdutoDTO produtoDTO;
+   
+    private int quantidade;
 
 }

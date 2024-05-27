@@ -57,7 +57,7 @@ public class ClienteService {
     Optional<Endereco> end = consultaCep.viaCep(cep);
     if(end.isPresent()){ 
       cliente.setEndereco(end.get());
-      cliente.getEndereco().setNumero(numero);;
+      cliente.getEndereco().setNumero(numero);
      return clienteRepository.save(cliente).converterClienteDTO();
   }else{
     return null;

@@ -119,7 +119,7 @@ public class ClienteController {
 
   @CrossOrigin(origins = "*")
   @GetMapping( value = "/email/")
-  public ResponseEntity<ClienteDTO> buscarClientesEmail(@RequestParam(name = "email", required= false) String email){
+  public ResponseEntity<ClienteDTO> buscarClientesEmail(@RequestParam("email") String email){
     ClienteDTO lClienteDTOs = clienteService.buscarClienteEmail(email);
     if(Objects.isNull(lClienteDTOs))
       return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

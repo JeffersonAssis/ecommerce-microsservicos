@@ -28,6 +28,7 @@ import com.ecommerce.produtos.api.util.ValidadorBindingResult;
 
 import jakarta.validation.Valid;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping("produtos")
 public class ProdutoController {
@@ -39,7 +40,7 @@ public class ProdutoController {
       this.produtoService = produtoService;
     }
 
-    @CrossOrigin("*")
+    
     @PostMapping("")
     public ResponseEntity<?> produtoSave(@RequestBody @Valid Produto produto, BindingResult bindingResult ){
        ValidadorBindingResult validadorBindingResult = new ValidadorBindingResult(bindingResult);
@@ -53,7 +54,15 @@ public class ProdutoController {
        }
     }
 
-    @CrossOrigin("*")
+    @GetMapping("/{codigo}")
+    public ResponseEntity<ProdutoDTO> buscarCodigo(@PathVariable("codigo") String codigo){
+     ProdutoDTO pDto = produtoService.findByCodigo(codigo);
+     if(Objects.nonNull(pDto))
+      return ResponseEntity.status(HttpStatus.OK).body(pDto);
+
+      return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+    
     @PostMapping("listaProdutos/")
     public ResponseEntity<?> produtoListSave(@RequestBody @Valid List<Produto> produto, BindingResult bindingResult ){
        ValidadorBindingResult validadorBindingResult = new ValidadorBindingResult(bindingResult);
@@ -67,7 +76,7 @@ public class ProdutoController {
        }
     }
 
-  @CrossOrigin("*")
+
   @DeleteMapping("delete/{codigo}")
   public ResponseEntity<?> categoriaDelete(@PathVariable("codigo") String codigo){
     ProdutoDTO pDto = produtoService.produtoDelete(codigo);
@@ -77,7 +86,7 @@ public class ProdutoController {
     return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Categoria não cadastrada!");
   }
 
-  @CrossOrigin("*")
+ 
   @GetMapping("/")
   public ResponseEntity<List<ProdutoDTO>> listaProdutos(){
     List<ProdutoDTO> listpDto = produtoService.listarProdutoDTOs();
@@ -87,7 +96,6 @@ public class ProdutoController {
    return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); 
   }
 
-  @CrossOrigin("*")
   @GetMapping("/buscar")
   public ResponseEntity<List<ProdutoDTO>> listaProdutos(@RequestParam(name="menorPreco", required = false, defaultValue= "0") double menorPreco,
   @RequestParam(name="maiorPreco", required =false, defaultValue = "0") double maiorPreco, @RequestParam(name ="nomeProd" , required = false) String nomeProd,
@@ -111,7 +119,7 @@ public class ProdutoController {
     return ResponseEntity.status(HttpStatus.OK).body(lProdutoDTOs);
   }
 
-  @CrossOrigin("*")
+  
   @GetMapping("/pagebuscar")
   public ResponseEntity<Page<ProdutoDTO>> listaProdutosPaginacao(@RequestParam(name="menorPreco", defaultValue = "0", required = false) Double menorPreco,
   @RequestParam(name="maiorPreco", required =false ,defaultValue = "0") Double maiorPreco, @RequestParam(name ="nomeProd" , required = false) String nomeProd,

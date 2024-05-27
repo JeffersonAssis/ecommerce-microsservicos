@@ -12,7 +12,7 @@ public class EnderecoService {
     public EnderecoDTO buscaEnderecoDTO(String cep){
       RestTemplate restTemplate = new RestTemplate();
 
-      String url = String.format("https://viacep.com.br/ws/%s/json", cep);
+      String url = String.format("https://viacep.com.br/ws/%s/json/", cep);
       ResponseEntity<EnderecoDTO> response = restTemplate.getForEntity(url, EnderecoDTO.class); 
 
       return response.getBody();

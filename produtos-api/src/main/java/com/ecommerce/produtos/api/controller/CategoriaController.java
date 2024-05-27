@@ -22,6 +22,7 @@ import com.ecommerce.produtos.api.util.ValidadorBindingResult;
 
 import jakarta.validation.Valid;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping("categorias")
 public class CategoriaController {
@@ -33,7 +34,7 @@ public class CategoriaController {
       this.categoriaService = categoriaService;
     }
 
-    @CrossOrigin("*")
+    
     @PostMapping("")
     public ResponseEntity<?> categoriaSave(@RequestBody @Valid Categoria categoria, BindingResult bindingResult ){
        ValidadorBindingResult validadorBindingResult = new ValidadorBindingResult(bindingResult);
@@ -47,7 +48,7 @@ public class CategoriaController {
        }
     }
 
-  @CrossOrigin("*")
+ 
   @DeleteMapping("delete/{nome}")
   public ResponseEntity<?> categoriaDelete(@PathVariable("nome") String nome){
     CategoriaDTO cDto = categoriaService.categoiraDelete(nome);
@@ -57,7 +58,7 @@ public class CategoriaController {
     return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Categoria não cadastrada!");
   }
 
-  @CrossOrigin("*")
+ 
   @GetMapping("/")
   public ResponseEntity<List<CategoriaDTO>> listaCategorias(){
     List<CategoriaDTO> listcDto = categoriaService.listarCategorias();

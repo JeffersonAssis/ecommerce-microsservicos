@@ -69,6 +69,14 @@ public class ProdutoService {
     return new ArrayList<>();
   }
   
+  public ProdutoDTO findByCodigo(String codigo){
+    Optional<Produto> listProOp = produtoRepository.findByCodigo(codigo);
+    if(listProOp.isPresent()){
+      return listProOp.get().conveProdutoDTO();
+    }
+    return new ProdutoDTO();
+  }
+  
   public List<ProdutoDTO> findByMenorPreco(double menorPreco){
     Optional<List<Produto>> listProOp = produtoRepository.findByPrecoLessThan(menorPreco);
     if(listProOp.isPresent()){
