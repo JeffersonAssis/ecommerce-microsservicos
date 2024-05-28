@@ -40,6 +40,7 @@ public class Item {
         itemDTO.setProdutoDTO(produtoDTO);
         itemDTO.setId(id);
         itemDTO.setQuantidade(quantidade);
+        itemDTO.setSubTotal(preco*quantidade);
 
         return itemDTO;
     }

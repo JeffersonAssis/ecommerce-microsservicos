@@ -19,4 +19,6 @@ public class ItemDTO {
    
     private int quantidade;
 
+    private double subTotal;
+
 }
