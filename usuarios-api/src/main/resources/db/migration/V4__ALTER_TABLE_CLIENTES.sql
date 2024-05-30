@@ -1,0 +1,4 @@
+ALTER TABLE tb_clientes 
+ADD COLUMN `senha` VARCHAR(255) NOT NULL,
+ADD COLUMN `administrador` TINYINT NOT NULL,
+ADD COLUMN `user_externo` TINYINT NOT NULL;

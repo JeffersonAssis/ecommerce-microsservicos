@@ -3,6 +3,7 @@ package com.ecommerce.usuarios.api.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -28,6 +29,9 @@ public class ClienteService {
   private ConsultaCep consultaCep;
 
   @Autowired
+  private AuthorizationService authorizationService;
+
+  @Autowired
   public ClienteService (ClienteRepository clienteRepository){
     this.clienteRepository = clienteRepository;
   
@@ -35,6 +39,10 @@ public class ClienteService {
 
 
   public ClienteDTO save(Cliente cliente){
+    
+    String Senha = cliente.getSenha();
+    BCryptPasswordEncoder encoder = authorizationService.getCryptPasswordEncoder();
+    cliente.setSenha(encoder.encode(Senha));
 
     EnderecoDTO enderecoDTO = enderecoService.buscaEnderecoDTO(cliente.getEndereco().getCep());
     Endereco end = new Endereco();
@@ -52,6 +60,9 @@ public class ClienteService {
   }
 
   public ClienteDTO saveCliente(Cliente cliente){
+    String Senha = cliente.getSenha();
+    BCryptPasswordEncoder encoder = authorizationService.getCryptPasswordEncoder();
+    cliente.setSenha(encoder.encode(Senha));
     String cep = cliente.getEndereco().getCep();
     String numero = cliente.getEndereco().getNumero();
     Optional<Endereco> end = consultaCep.viaCep(cep);
@@ -74,6 +85,15 @@ public class ClienteService {
     
   }
   
+  public Cliente buscarClienteCpfA (String cpf){
+    Optional<Cliente> cliOp =  clienteRepository.findByCpf(cpf);
+      if(cliOp.isPresent()){
+        return cliOp.get();  
+      }      
+          
+      return null;  
+    }
+
   public ClienteDTO buscarClienteCpf (String cpf){
     Optional<Cliente> cliOp =  clienteRepository.findByCpf(cpf);
       if(cliOp.isPresent()){
@@ -152,4 +172,6 @@ public class ClienteService {
         return null;
       }
   }
+
+  
 }

@@ -11,7 +11,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,7 +40,6 @@ public class FornecedorController {
 
   }
 
-  @CrossOrigin(origins = "*")
   @PostMapping("")
   public ResponseEntity<?> saveFornecedor(@RequestBody @Valid Fornecedor fornecedor, BindingResult bindingResult){
       ValidadorBindingResult validadorBindingResult = new ValidadorBindingResult(bindingResult);
@@ -55,7 +53,6 @@ public class FornecedorController {
       }
   }
 
-  @CrossOrigin(origins = "*")
   @GetMapping("")
   public ResponseEntity<List<FornecedorDTO>> buscarTodosFornecedores(){
       List<FornecedorDTO> l = fornecedorService.obterListFornecedor();
@@ -64,7 +61,7 @@ public class FornecedorController {
       return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
   } 
 
-  @CrossOrigin(origins = "*")
+
   @GetMapping(value = "/paginacao")
   public ResponseEntity<Page<FornecedorDTO>> buscarTodosForncedoresPaginado(@RequestParam(defaultValue ="0") int pagina, @RequestParam(defaultValue = "5") int quant, 
                                                                    @RequestParam(defaultValue = "id") String campoOrdenacao,@RequestParam(defaultValue = "asc") String ordenacao){
@@ -73,7 +70,6 @@ public class FornecedorController {
     return ResponseEntity.status(HttpStatus.OK).body(fornecedorService.paginacaoFornecdor(paginacao));
   } 
 
-  @CrossOrigin(origins = "*")
   @GetMapping( value = "/nomeFantasia")
   public ResponseEntity<List<FornecedorDTO>> buscarFornecedorNomeFantasia(@RequestParam("nomeFantasia") String nomeFantasia){
     List<FornecedorDTO> fornecedorDTOs = fornecedorService.buscarFornecedorNomeFantasia(nomeFantasia);
@@ -84,7 +80,6 @@ public class FornecedorController {
     
     }
 
-  @CrossOrigin(origins = "*")
   @GetMapping( value = "/buscar")
   public ResponseEntity<FornecedorDTO> buscarFonecedor(@RequestParam(name = "razao" , required = false) String razao, @RequestParam(name= "cnpj" , required = false) String cnpj, @RequestParam(name= "email" , required = false) String email){
     FornecedorDTO fDto = null;
@@ -108,7 +103,7 @@ public class FornecedorController {
     
   }
   
-  @CrossOrigin("*")
+
   @DeleteMapping("/{cnpj}")
   public ResponseEntity<FornecedorDTO> deleteCliente(@PathVariable ("cnpj") String cnpj){
     FornecedorDTO forn = fornecedorService.buscarFornecedorCnpj(cnpj);
@@ -118,7 +113,6 @@ public class FornecedorController {
     return ResponseEntity.status(HttpStatus.OK).body(forn);
   }
 
-  @CrossOrigin("*")
   @PutMapping("/{cnpj}")
   public ResponseEntity<?> atulaizarCliente(@PathVariable("cnpj") String cnpj,@RequestBody @Valid Fornecedor fornecedor, BindingResult bindingResult){
     ValidadorBindingResult validadorBindingResult = new ValidadorBindingResult(bindingResult);

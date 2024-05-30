@@ -2,8 +2,13 @@ package com.ecommerce.usuarios.api.model;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.Collection;
+import java.util.List;
 
 import org.hibernate.validator.constraints.br.CPF;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import com.ecommerce.comrpas.client.usuario.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -27,7 +32,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "tb_clientes")
-public class Cliente {
+public class Cliente implements UserDetails {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,6 +44,9 @@ public class Cliente {
   @Pattern( regexp = "^[a-zA-ZÀ-ÖØ-öø-ÿ\\s'-]+$", message = "Nome inválido")
   @Column(name = "nome", nullable = false)
   private String nome;
+
+  @Column(nullable = false)
+  private String senha;
 
   @NotNull(message = "O campo cpf não pode ser nulo")
   @NotBlank(message = "O campo cpf não pode ser em branco")
@@ -65,6 +73,11 @@ public class Cliente {
   @Embedded
   private Endereco endereco;
 
+  @Column(nullable = false)
+  private boolean administrador;
+
+  @Column(nullable = false, name= "user_externo")
+  private boolean userExterno;
   
   public ClienteDTO converterClienteDTO(){
       ClienteDTO cliDto = new ClienteDTO();
@@ -85,4 +98,52 @@ public class Cliente {
 
       return cliDto;
     }
+
+
+  @Override
+  public Collection<? extends GrantedAuthority> getAuthorities() {
+    if(this.administrador){
+      return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"));
+    }
+    if(this.userExterno){
+      return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+    }
+
+    return null;
+  }
+
+  @Override
+  public String getPassword() {
+    return senha;
+  }
+
+
+  @Override
+  public String getUsername() {
+    return cpf;
+  }
+
+
+  @Override
+  public boolean isAccountNonExpired() {
+    return true;
+  }
+
+
+  @Override
+  public boolean isAccountNonLocked() {
+    return true;
+  }
+
+
+  @Override
+  public boolean isCredentialsNonExpired() {
+    return true;
+  }
+
+
+  @Override
+  public boolean isEnabled() {
+    return true;
+  }
 }

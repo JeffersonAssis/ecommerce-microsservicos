@@ -12,7 +12,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,7 +34,7 @@ import jakarta.validation.Valid;
 public class ClienteController {
 
   private final ClienteService clienteService;
- 
+  
 
   @Autowired
   public ClienteController(ClienteService clienteService){
@@ -43,21 +42,22 @@ public class ClienteController {
 
   }
 
-  @CrossOrigin(origins = "*")
   @PostMapping("")
   public ResponseEntity<?> saveCliente(@RequestBody @Valid Cliente cliente, BindingResult bindingResult){
+      
       ValidadorBindingResult validadorBindingResult = new ValidadorBindingResult(bindingResult);
       if(validadorBindingResult.hasErrors()){
         return ResponseEntity.badRequest().body(validadorBindingResult.getErrors());
       }
       try{
+        
         return ResponseEntity.ok().body(clienteService.saveCliente(cliente));
       } catch (Exception e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao cadastrar o cliente "+ e);
       }
   }
 
-  @CrossOrigin(origins = "*")
+ 
   @PostMapping("save")
   public ResponseEntity<?> save(@RequestBody @Valid Cliente cliente, BindingResult bindingResult){
       ValidadorBindingResult validadorBindingResult = new ValidadorBindingResult(bindingResult);
@@ -71,7 +71,7 @@ public class ClienteController {
       }
   }
 
-  @CrossOrigin(origins = "*")
+
   @GetMapping(value = "/{cpf}")
   public ResponseEntity<ClienteDTO> buscarClienteCpf(@PathVariable("cpf") String cpf){  
     ClienteDTO cliente = clienteService.buscarClienteCpf(cpf);
@@ -82,7 +82,6 @@ public class ClienteController {
   } 
 
   
-  @CrossOrigin(origins = "*")
   @GetMapping(value = "paginacao")
   public ResponseEntity<Page<ClienteDTO>> buscarTodosClientesPaginado(@RequestParam(defaultValue ="0") int pagina, @RequestParam(defaultValue = "5") int quant, 
   @RequestParam(defaultValue = "id") String campoOrdenacao,@RequestParam(defaultValue = "asc") String ordenacao){
@@ -93,7 +92,6 @@ public class ClienteController {
   } 
 
  
-  @CrossOrigin(origins = "*")
   @GetMapping( value = "/buscar")
   public ResponseEntity<List<ClienteDTO>> buscarClientesNomeLike(@RequestParam( name = "nome", required = false) String nome,
   @RequestParam(name= "inicio", required = false) LocalDate inicio, @RequestParam(name= "fim", required = false) LocalDate fim,
@@ -117,7 +115,6 @@ public class ClienteController {
 
     }
 
-  @CrossOrigin(origins = "*")
   @GetMapping( value = "/email/")
   public ResponseEntity<ClienteDTO> buscarClientesEmail(@RequestParam("email") String email){
     ClienteDTO lClienteDTOs = clienteService.buscarClienteEmail(email);
@@ -128,7 +125,6 @@ public class ClienteController {
     
     }
 
-  @CrossOrigin(origins = "*")
   @GetMapping( value = "/existeemail/")
   public ResponseEntity<String> existeClientesEmail(@RequestParam("email") String email){
     if(!clienteService.isExistClienteEmail(email))
@@ -138,8 +134,6 @@ public class ClienteController {
     
     }
 
-  
-  @CrossOrigin("*")
   @DeleteMapping("/{cpf}")
   public ResponseEntity<ClienteDTO> deleteCliente(@PathVariable ("cpf") String cpf){
     ClienteDTO cli = clienteService.deleteCliente(cpf);
@@ -149,7 +143,6 @@ public class ClienteController {
     return ResponseEntity.status(HttpStatus.OK).body(cli);
   }
 
-  @CrossOrigin("*")
   @PutMapping("/{cpf}")
   public ResponseEntity<?> atulaizarCliente(@PathVariable("cpf") String cpf,@RequestBody @Valid Cliente cliente, BindingResult bindingResult){
     ValidadorBindingResult validadorBindingResult = new ValidadorBindingResult(bindingResult);
