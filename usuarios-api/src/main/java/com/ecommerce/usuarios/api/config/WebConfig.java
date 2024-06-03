@@ -11,10 +11,9 @@ public class WebConfig implements WebMvcConfigurer {
 	 	@Override
 	  public void addCorsMappings(@NonNull CorsRegistry registry) {
 	        registry.addMapping("/**")//as rotas da aplicação /clientes/bucasr** Seria especifico
-	            .allowedOrigins("**")//rota para liberar o acesso a api. /http:/localhost:8082
+	            .allowedOrigins("http://localhost:8082/**")//rota para liberar o acesso a api. /http:/localhost:8082
 	            .allowedMethods("GET", "POST", "PUT", "DELETE")
-	            .allowCredentials(true)
-              .maxAge(3600);
+							.allowedHeaders("*");
 	  }
   
 }

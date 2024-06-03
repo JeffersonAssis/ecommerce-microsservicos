@@ -35,9 +35,9 @@ public class SecurityFilter extends OncePerRequestFilter{
         String Token = _getTokeString(request);
 
         if(Objects.nonNull(Token)){
-          String subject = tokenService.getSubject(Token);
+          String cpf = tokenService.getSubject(Token);
 
-          UserDetails cliente = authorizationService.loadUserByUsername(subject);
+          UserDetails cliente = authorizationService.loadUserByUsername(cpf);
 
           Authentication authentication = new UsernamePasswordAuthenticationToken(cliente, null, cliente.getAuthorities());
           

@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,6 +44,7 @@ public class ClienteController {
   }
 
   @PostMapping("")
+  @Secured("ROLE_ADMIN")
   public ResponseEntity<?> saveCliente(@RequestBody @Valid Cliente cliente, BindingResult bindingResult){
       
       ValidadorBindingResult validadorBindingResult = new ValidadorBindingResult(bindingResult);
@@ -57,8 +59,8 @@ public class ClienteController {
       }
   }
 
- 
-  @PostMapping("save")
+  @PostMapping("save") 
+  @Secured({"ROLE_ADMIN"})
   public ResponseEntity<?> save(@RequestBody @Valid Cliente cliente, BindingResult bindingResult){
       ValidadorBindingResult validadorBindingResult = new ValidadorBindingResult(bindingResult);
       if(validadorBindingResult.hasErrors()){
@@ -71,8 +73,8 @@ public class ClienteController {
       }
   }
 
-
   @GetMapping(value = "/{cpf}")
+  @Secured({"ROLE_ADMIN", "ROLE_USER"})
   public ResponseEntity<ClienteDTO> buscarClienteCpf(@PathVariable("cpf") String cpf){  
     ClienteDTO cliente = clienteService.buscarClienteCpf(cpf);
     if(Objects.isNull(cliente)){
@@ -81,8 +83,8 @@ public class ClienteController {
      return ResponseEntity.status(HttpStatus.OK).body(cliente);
   } 
 
-  
   @GetMapping(value = "paginacao")
+  @Secured({"ROLE_ADMIN", "ROLE_USER"})
   public ResponseEntity<Page<ClienteDTO>> buscarTodosClientesPaginado(@RequestParam(defaultValue ="0") int pagina, @RequestParam(defaultValue = "5") int quant, 
   @RequestParam(defaultValue = "id") String campoOrdenacao,@RequestParam(defaultValue = "asc") String ordenacao){
     
@@ -91,8 +93,8 @@ public class ClienteController {
     return ResponseEntity.status(HttpStatus.OK).body(clienteService.paginacaoListaClientes(paginacao));
   } 
 
- 
   @GetMapping( value = "/buscar")
+  @Secured({"ROLE_ADMIN", "ROLE_USER"})
   public ResponseEntity<List<ClienteDTO>> buscarClientesNomeLike(@RequestParam( name = "nome", required = false) String nome,
   @RequestParam(name= "inicio", required = false) LocalDate inicio, @RequestParam(name= "fim", required = false) LocalDate fim,
   @RequestParam(name= "nomeIgCase", required = false) String nomeIgCase){
@@ -114,8 +116,9 @@ public class ClienteController {
     return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 
     }
-
+  
   @GetMapping( value = "/email/")
+  @Secured({"ROLE_ADMIN", "ROLE_USER"})
   public ResponseEntity<ClienteDTO> buscarClientesEmail(@RequestParam("email") String email){
     ClienteDTO lClienteDTOs = clienteService.buscarClienteEmail(email);
     if(Objects.isNull(lClienteDTOs))
@@ -124,8 +127,9 @@ public class ClienteController {
     return ResponseEntity.status(HttpStatus.OK).body(lClienteDTOs);
     
     }
-
+  
   @GetMapping( value = "/existeemail/")
+  @Secured({"ROLE_ADMIN", "ROLE_USER"})
   public ResponseEntity<String> existeClientesEmail(@RequestParam("email") String email){
     if(!clienteService.isExistClienteEmail(email))
       return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -135,6 +139,7 @@ public class ClienteController {
     }
 
   @DeleteMapping("/{cpf}")
+  @Secured({"ROLE_ADMIN"})
   public ResponseEntity<ClienteDTO> deleteCliente(@PathVariable ("cpf") String cpf){
     ClienteDTO cli = clienteService.deleteCliente(cpf);
     if(Objects.isNull(cli)){
@@ -143,7 +148,9 @@ public class ClienteController {
     return ResponseEntity.status(HttpStatus.OK).body(cli);
   }
 
+
   @PutMapping("/{cpf}")
+  @Secured({"ROLE_ADMIN"})
   public ResponseEntity<?> atulaizarCliente(@PathVariable("cpf") String cpf,@RequestBody @Valid Cliente cliente, BindingResult bindingResult){
     ValidadorBindingResult validadorBindingResult = new ValidadorBindingResult(bindingResult);
       if(validadorBindingResult.hasErrors()){

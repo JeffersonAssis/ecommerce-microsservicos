@@ -9,12 +9,14 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ecommerce.compras.api.dto.CompraAuthDTO;
 import com.ecommerce.compras.api.model.Compra;
 import com.ecommerce.compras.api.model.Item;
 import com.ecommerce.compras.api.repository.CompraRepository;
 import com.ecommerce.comrpas.client.compra.CompraDTO;
 import com.ecommerce.comrpas.client.compra.ItemDTO;
 import com.ecommerce.comrpas.client.usuario.ClienteDTO;
+
 
 @Service
 public class CompraService {
@@ -31,7 +33,8 @@ public class CompraService {
   this.itemService = itemService; 
   }
 
-  public CompraDTO saveCompra(Compra compra){
+  public CompraDTO saveCompra(CompraAuthDTO cDto){
+    Compra compra = cDto.getCompra();
     compra.setData(LocalDate.now());
     List<Item> listItem = new ArrayList<>();
     listItem.addAll(compra.getItens());
@@ -44,17 +47,17 @@ public class CompraService {
       return item.getPreco() * item.getQuantidade();
     }).sum() );
 
-    ClienteDTO clienteDTO = clienteService.buscarCliente(compra.getEmailCliente());
+    ClienteDTO clienteDTO = clienteService.buscarCliente(compra.getEmailCliente(), cDto.getTokem());
     List<ItemDTO> lDtos = itemService.convertLisDto(listItem);
     return compraRepository.save(compra).converteCompra(clienteDTO, lDtos);
    
   }
 
-  public List<CompraDTO> obterTodasCompras(){
+  public List<CompraDTO> obterTodasCompras(String token){
     List<Compra> lCompras = compraRepository.findAll();
 
   return lCompras.stream().map(c -> {
-      ClienteDTO cDto = clienteService.buscarCliente(c.getEmailCliente());
+      ClienteDTO cDto = clienteService.buscarCliente(c.getEmailCliente(), token);
       List<ItemDTO> iDtos  = itemService.convertLisDto(c.getItens()); 
      return c.converteCompra(cDto, iDtos);
     }).collect(Collectors.toList());
@@ -62,14 +65,14 @@ public class CompraService {
    
   }
 
-  public List<CompraDTO> obterTodasComprasEmail(String email) {
+  public List<CompraDTO> obterTodasComprasEmail(String email, String token) {
 
   Optional<List<Compra>> olCompras = compraRepository.findByEmailCliente(email);
   if(olCompras.isPresent()){
     List<Compra> lCompras = olCompras.get();
   
     return lCompras.stream().map(c -> {
-      ClienteDTO cDto = clienteService.buscarCliente(c.getEmailCliente());
+      ClienteDTO cDto = clienteService.buscarCliente(c.getEmailCliente(), token);
       List<ItemDTO> iDtos  = itemService.convertLisDto(c.getItens()); 
      return c.converteCompra(cDto, iDtos);
     }).collect(Collectors.toList());
@@ -81,13 +84,13 @@ public class CompraService {
 
  
 
-  public List<CompraDTO> obterTodasComprasData(LocalDate inicio, LocalDate fim) {
+  public List<CompraDTO> obterTodasComprasData(LocalDate inicio, LocalDate fim, String token) {
     Optional<List<Compra>> olCompras = compraRepository.findByDataBetween(inicio, fim);
   if(olCompras.isPresent()){
     List<Compra> lCompras = olCompras.get();
   
     return lCompras.stream().map(c -> {
-      ClienteDTO cDto = clienteService.buscarCliente(c.getEmailCliente());
+      ClienteDTO cDto = clienteService.buscarCliente(c.getEmailCliente(), token);
       List<ItemDTO> iDtos  = itemService.convertLisDto(c.getItens()); 
      return c.converteCompra(cDto, iDtos);
     }).collect(Collectors.toList());

@@ -1,6 +1,7 @@
 package com.ecommerce.usuarios.api.service;
 
 import java.util.Objects;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -11,23 +12,24 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.ecommerce.usuarios.api.model.Cliente;
+import com.ecommerce.usuarios.api.repository.ClienteRepository;
 
 @Service
 public class AuthorizationService implements UserDetailsService {
 
   @Autowired
-  private ClienteService clienteService;
+  private ClienteRepository clienteRepository;
 
   @Override
   public UserDetails loadUserByUsername(String cpf) throws UsernameNotFoundException {
-    Cliente cliente =  clienteService.buscarClienteCpfA(cpf);
-    if(Objects.nonNull(cliente)){
-      return cliente;
+    Optional<Cliente> cliente =  clienteRepository.findByCpf(cpf);
+    if( cliente.isPresent()){
+      return cliente.get();
     }
      throw new UsernameNotFoundException("Cliente não encontrado!");
   }
 
-  @Bean
+
   public BCryptPasswordEncoder getCryptPasswordEncoder(){
     return new  BCryptPasswordEncoder();
   }

@@ -44,20 +44,7 @@ public class TokenService {
   private Instant _exprirationData(){
     return LocalDateTime.now().plusDays(30).toInstant(ZoneOffset.of("-03:00"));
   }
-  //foi inserido esse metodo
-  public boolean validateToken(String token) {
-    try {
-        Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY);
-        JWT.require(algorithm)
-            .withIssuer(TOKEN_ISSUER)
-            .build()
-            .verify(token);
-        return true;
-    } catch (Exception e) {
-        return false;
-    }
-}
-
+  
   @Value("${spring.security.sercret-key}")
   private String SECRET_KEY;
 
