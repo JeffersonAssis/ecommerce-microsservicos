@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ecommerce.compras.api.dto.CompraAuthDTO;
-import com.ecommerce.compras.api.model.Compra;
 import com.ecommerce.compras.api.service.CompraService;
 import com.ecommerce.compras.api.util.ValidadorBindingResult;
 import com.ecommerce.comrpas.client.compra.CompraDTO;
