@@ -13,5 +13,5 @@ public class CompraAuthDTO {
     
   private Compra compra;
   
-  private String tokem;
+  private String token;
 }

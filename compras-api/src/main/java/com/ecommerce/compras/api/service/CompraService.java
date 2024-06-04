@@ -47,7 +47,7 @@ public class CompraService {
       return item.getPreco() * item.getQuantidade();
     }).sum() );
 
-    ClienteDTO clienteDTO = clienteService.buscarCliente(compra.getEmailCliente(), cDto.getTokem());
+    ClienteDTO clienteDTO = clienteService.buscarCliente(compra.getEmailCliente(), cDto.getToken());
     List<ItemDTO> lDtos = itemService.convertLisDto(listItem);
     return compraRepository.save(compra).converteCompra(clienteDTO, lDtos);
    
