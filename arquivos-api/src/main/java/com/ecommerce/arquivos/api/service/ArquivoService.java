@@ -4,10 +4,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,33 +23,32 @@ public class ArquivoService {
     @Autowired
     private ArquivoRepository arquivoRepository;
 
-    public Arquivo uploadFile(MultipartFile file, String nome) throws IOException{
-      String diretorio = "C:\\Users\\Davi\\AppData\\Local\\Temp\\tomcat.8084.8698719616056341416\\work\\Tomcat\\localhost\\ROOT\\src\\main\\resources\\assets";
-      String path = diretorio+"\\"+file.getOriginalFilename();
-     
-      File dir = new File(diretorio);
-     
-      if(!dir.exists()){
-        dir.mkdirs();
-      }
+    public static final String ROOT_PATH = "../arquivos/";
 
-      File fileNovo = new File(path);
-      file.transferTo(fileNovo);
+    public boolean arquivoExist(String nome){
+      Optional<Arquivo> optArq = arquivoRepository.findByNome(nome);
+      return optArq.isPresent();
+    }
 
-      Arquivo arquivo = new Arquivo();
- 
-      arquivo.setNome(nome);
- 
+    public Arquivo uploadFile(MultipartFile file) throws IOException{
+      
+      String pathString = ROOT_PATH + file.getOriginalFilename();
+      Path path = Paths.get(pathString);
+      Files.createDirectories(path.getParent());
+      Files.write(path, file.getBytes());
+
+      Arquivo arquivo = new Arquivo(); 
+      arquivo.setNome(file.getOriginalFilename());
       arquivo.setDataHoraEnvio(LocalDateTime.now());
       arquivo.setTipo(file.getContentType());
-      arquivo.setPath(path);
+      arquivo.setPath(pathString);
       
  
       return  arquivoRepository.save(arquivo);
      
     }
 
-    public byte[] downloadArquivo(String nome) throws IOException{
+    public ByteArrayResource downloadArquivo(String nome) throws IOException{
       Optional<Arquivo> opArqui = arquivoRepository.findByNome(nome);
 
       if(opArqui.isPresent()){
@@ -54,7 +56,7 @@ public class ArquivoService {
 
         File file = new File(path);
         if(file.exists()){
-          return Files.readAllBytes(file.toPath());
+          return  new ByteArrayResource(Files.readAllBytes(file.toPath()));
         }else{
           throw new FileNotFoundException("Diretorio não encontrado: " +path);
         }
